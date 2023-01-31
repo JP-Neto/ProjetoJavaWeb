@@ -1,20 +1,26 @@
 package pos.web.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import pos.web.domain.entity.Aluno;
 import pos.web.domain.repository.AlunoRepository;
 
+import java.io.Serializable;
+
 @Service
-public class AlunoService {
+public class AlunoService{
 
 	@Autowired
 	private AlunoRepository alunoRepository;
-	
-	@Transactional
+	@Autowired
+	private JmsTemplate jmsTemplate;
+		@Transactional
 	public Aluno salvar(Aluno aluno) {
+		aluno = alunoRepository.save(aluno);
+		jmsTemplate.convertAndSend("Fila_aluno_queue", aluno);
 		return alunoRepository.save(aluno);
 	}
 	

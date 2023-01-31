@@ -9,11 +9,13 @@ import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
+
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "aluno")
-public class Aluno {
+public class Aluno implements Serializable {
 
 	@EqualsAndHashCode.Include
 	@Id

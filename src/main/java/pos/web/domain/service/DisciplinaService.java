@@ -1,20 +1,28 @@
 package pos.web.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import pos.web.domain.entity.Disciplina;
 import pos.web.domain.repository.DisciplinaRepository;
 
+import java.io.Serializable;
+
 @Service
-public class DisciplinaService {
+public class DisciplinaService  {
 
 	@Autowired
 	private DisciplinaRepository disciplinaRepository;
+	@Autowired
+	private JmsTemplate jmsTemplate;
 	
 	@Transactional
 	public Disciplina salvar(Disciplina disciplina) {
+
+		//disciplina = DisciplinaRepository.save(disciplina);
+		jmsTemplate.convertAndSend("disciplina_queue", disciplina);
 		return disciplinaRepository.save(disciplina);
 	}
 	

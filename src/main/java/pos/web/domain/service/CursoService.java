@@ -1,20 +1,27 @@
 package pos.web.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import pos.web.domain.entity.Curso;
 import pos.web.domain.repository.CursoRepository;
 
+import java.io.Serializable;
+
 @Service
-public class CursoService {
+public class CursoService  {
 
 	@Autowired
 	private CursoRepository cursoRepository;
-	
+
+	@Autowired
+	private JmsTemplate jmsTemplate;
 	@Transactional
 	public Curso salvar(Curso curso) {
+
+		curso = cursoRepository.save(curso);
+		jmsTemplate.convertAndSend("curso_queue", curso);
 		return cursoRepository.save(curso);
 	}
 	
